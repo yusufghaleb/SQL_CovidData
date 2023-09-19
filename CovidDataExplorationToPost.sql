@@ -10,7 +10,7 @@ ORDER BY 3,4;
 
 
 
---After exploring the data the some locations have non countries (continents) and when they do the continent column is null.
+--After exploring the data, some locations aren't countries (continents). When location column is not a country, the continent column is null.
 --Hence the not null continent phrase
 SELECT*
 FROM Portfolio_Project.dbo.CovidVaccinations
@@ -32,7 +32,7 @@ ORDER BY 1,2;
 
 
 
---LOOKING FOR COUNRTRIES WITH EARLIEST DEATHS**
+--LOOKING FOR COUNTRIES WITH EARLIEST DEATHS**
 SELECT Location, date, population, total_cases, total_deaths 
 FROM Portfolio_Project..CovidDeaths
 WHERE continent IS NOT NULL
@@ -105,7 +105,7 @@ ORDER BY DeathRateOfInfected DESC;
 
 
 --Looking at Total Cases vs Population
---Shows what percentage of population in each country got Covid by date
+--Shows what percentage of population in each country got COVID by date
 SELECT Location, date, Population, total_cases, (total_cases/population)*100 AS Population_Infected_Percentage
 FROM Portfolio_Project..CovidDeaths
 WHERE continent IS NOT NULL
@@ -138,7 +138,7 @@ ORDER BY Population_Infected_Percentage DESC;
 
 
 
---Coutries with the highest deathrates of infected people compared to their infection rates
+--Countries with the highest death rates of infected people compared to their infection rates
 SELECT Location, Population, MAX(total_cases) AS MaxCases, MAX(CONVERT(INT, total_deaths)) AS MaxDeaths, (MAX(CONVERT(INT,total_deaths))/MAX(total_cases))*100 AS DeathRateOfInfected, MAX((total_cases/Population)*100) AS InfectionRateOfPopulation
 FROM Portfolio_Project..CovidDeaths
 WHERE Continent IS NOT NULL
@@ -154,7 +154,7 @@ ORDER BY DeathRateOfInfected DESC;
 --Showing Countries with Highest Death count
 
 --issue with how data type is read when using this aggregate function, 
---so have to use cast/convert to change the total_deaths data type from nvarchar to integer (DATA TYPE CHANGE IS EXCLUSIVE TO QUERY ONLY AND IS NOT PERMAMNENT)
+--so have to use cast/convert to change the total_deaths data type from nvarchar to integer (DATA TYPE CHANGE IS EXCLUSIVE TO QUERY ONLY AND IS NOT PERMANENT)
 SELECT Location, Population, MAX(CAST(total_deaths AS INT)) AS TotalDeathCount
 FROM Portfolio_Project..CovidDeaths
 WHERE continent IS NOT NULL
@@ -168,7 +168,7 @@ ORDER BY TotalDeathCount DESC;
 
 
 
---Showing Countries with Highest Death count WITH CONTEXT OF added of infection rate of population and death rate of infected people
+--Showing Countries with Highest Death count WITH CONTEXT OF added infection rate of population and death rate of infected people
 SELECT Location, Population, MAX(CAST(total_deaths AS INT)) AS TotalDeathCount, 
 	(MAX(CONVERT(INT,total_deaths))/MAX(total_cases))*100 AS DeathRateOfInfected, MAX((total_cases/Population)*100) AS InfectionRateOfPopulation 
 FROM Portfolio_Project..CovidDeaths
@@ -213,7 +213,7 @@ ORDER BY TotalDeathCount DESC;
 
 
 
---Displaying continents with the highest covid death count
+--Displaying continents with the highest COVID death count
 SELECT continent, MAX(CAST(total_deaths AS INT)) AS TotalDeathCount
 FROM Portfolio_Project..CovidDeaths
 WHERE continent IS NOT NULL 
@@ -225,7 +225,7 @@ ORDER BY TotalDeathCount DESC;
 
 
 
---Looking at Comtinents with Highest Death Rate of infected people compared to Population
+--Looking at Continents with Highest Death Rate of infected people compared to Population
 SELECT continent, MAX (total_cases) AS max_cases, MAX(CONVERT(int, total_deaths)) AS max_deaths, (MAX (CONVERT(INT,total_deaths))/MAX(total_cases)*100) AS DeathRateOfInfected
 FROM Portfolio_Project..CovidDeaths
 WHERE continent IS NOT NULL
@@ -326,7 +326,7 @@ WHERE continent IS NOT NULL;
 
 
 
---Initial viewing to joined tables to ensure the tables are joined correctly
+--Initial viewing of joined tables to ensure the tables are joined correctly
 SELECT *
 FROM Portfolio_Project..CovidDeaths AS D, Portfolio_Project..CovidVaccinations AS V
 WHERE D.location=V.location
@@ -337,7 +337,7 @@ AND D.date=V.date
 
 
 
---Showing new vaccinations and rolling sum of new vaccinations by date for countries (EQUI-JOIN)
+--Showing new vaccinations and the rolling sum of new vaccinations by date for countries (EQUI-JOIN)
 SELECT D.continent, D.location, D.date, D.population, V.new_vaccinations,
 SUM(CONVERT(INT, V.new_vaccinations)) OVER (PARTITION BY D.location ORDER BY D.location, D.date) AS Rolling_Sum_of_Vaccinations_by_Location
 FROM Portfolio_Project..CovidDeaths AS D, Portfolio_Project..CovidVaccinations AS V
@@ -443,7 +443,7 @@ FROM #PercentPopulationVaccinated
 
 
 
---Creating Views to store data for visulizations
+--Creating Views to store data for visualizations
 
 
 
@@ -479,7 +479,7 @@ WHERE D.continent IS NOT NULL
 
 
 
---View for displaying continents with the highest covid death count
+--View for displaying continents with the highest COVID death count
 USE Portfolio_Project
 
 CREATE VIEW Continent_death_count AS
@@ -494,7 +494,7 @@ GROUP BY continent
 
 
 
---View for Comtinents with Death Rate of infected people compared to Population
+--View for Continents with Death Rate of infected people compared to Population
 USE Portfolio_Project
 
 CREATE VIEW Continent_death_rate AS
